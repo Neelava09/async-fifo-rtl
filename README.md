@@ -155,3 +155,7 @@ The RTL was synthesized using AMD Xilinx Vivado. The design achieved complete ti
 The design and implementation of the Dual-Clock Asynchronous FIFO were highly successful, demonstrating reliable cross-domain data transfer and robust clock domain crossing (CDC) safety. The use of Gray code pointers and 2-stage synchronizers ensured mathematically sound synchronization, while the internal logic accurately protected the memory boundaries against overflow and underflow conditions. 
 
 While timing simulations confirm the functional and setup/hold aspects of the design, it is important to acknowledge that metastability is ultimately a physical hardware phenomenon. The next phase of this project would involve deploying the netlist onto a physical FPGA development board to observe real-world silicon behavior under extended, heavy-load concurrent traffic. Overall, this IP block is lightweight, highly efficient, and perfectly suited for SoC applications requiring safe buffering between independent clock domains.
+
+## References
+
+* Cummings, C. E., & Alfke, P. (2002). *Simulation and Synthesis Techniques for Asynchronous FIFO Design with Asynchronous Pointer Comparisons*. SNUG (Synopsys Users Group) San Jose.
