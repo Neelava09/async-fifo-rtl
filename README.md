@@ -117,7 +117,41 @@ This phase tests the extreme edges of the 64-word buffer limits.
 Testing isolated writes and reads is insufficient for an AFIFO. The true test of the Gray code synchronizers occurs when pointers are moving simultaneously.
 * **The `fork ... join` Block:** The testbench uses Verilog's `fork...join` construct to spin up two parallel execution threads. 
 * **Simultaneous Operations:** One thread continuously injects data into the write domain while the other thread continuously extracts data from the read domain. 
-* **Dynamic Backpressure:** Both threads are programmed with dynamic backpressure awareness. The write thread checks `if (!wfull)` before writing, and the read thread checks `if (!rempty)` before reading. 
+* **Dynamic Backpressure:** Both threads are programmed with dynamic backpressure awareness. The write thread checks `if (!wfull)` before writing, and the read thread checks `if (!rempty)` before reading.  
 * **Data Integrity:** Even as the read and write pointers endlessly chase each other across the asynchronous clock boundary, the read thread maintains a tracking index to guarantee that every single word pulled from the concurrent stream matches the exact sequence injected by the write thread.
 
-* 
+
+## Verification & Simulation Results
+
+The asynchronous FIFO design was rigorously verified using a self-checking testbench. Based on the behavioral and post-synthesis timing simulations, the following key hardware results were validated:
+
+* **Data Integrity & Retrieval:** The FIFO correctly stored and retrieved data across the 100 MHz and 80 MHz clock domains without any data loss or corruption. Throughout both sequential and concurrent stress tests, the internal `error_count` remained at exactly 0.
+* **Accurate Boundary Detection:** The status flags behaved exactly as designed. The simulations confirm that the `walmost_full` flag precisely asserts at word 60 (based on the depth of 64 and an offset of 4). Furthermore, the `wfull` flag correctly engages at absolute capacity, effectively blocking additional writes and preventing memory overflow. 
+* **Post-Synthesis Consistency:** The Post-Synthesis Timing Simulation successfully mirrored the behavioral logic, proving that the translated gate-level netlist functions perfectly under real hardware delays without synchronization glitches.
+
+---
+
+## Synthesis & Timing Closure
+
+The RTL was synthesized using AMD Xilinx Vivado. The design achieved complete timing closure with a highly efficient logic footprint. By utilizing the `distributed` RAM attribute, the synthesis tool optimally mapped the storage array to LUTRAM rather than consuming larger Block RAM primitives.
+
+**Resource Utilization:**
+* **LUT:** 100 (0.19%)
+* **LUTRAM:** 44 (0.25%)
+* **Registers (FF):** 92 (0.09%)
+* **IO:** 76 (60.80%)
+
+**Timing Summary:**
+* **Worst Negative Slack (WNS):** +5.593 ns (Setup Clean)
+* **Worst Hold Slack (WHS):** +0.111 ns (Hold Clean)
+* **Worst Pulse Width Slack (WPWS):** +3.750 ns
+* **Failing Endpoints:** 0 out of 418 endpoints.
+* *All user-specified timing constraints across the asynchronous domains were successfully met.*
+
+---
+
+## Conclusion
+
+The design and implementation of the Dual-Clock Asynchronous FIFO were highly successful, demonstrating reliable cross-domain data transfer and robust clock domain crossing (CDC) safety. The use of Gray code pointers and 2-stage synchronizers ensured mathematically sound synchronization, while the internal logic accurately protected the memory boundaries against overflow and underflow conditions. 
+
+While timing simulations confirm the functional and setup/hold aspects of the design, it is important to acknowledge that metastability is ultimately a physical hardware phenomenon. The next phase of this project would involve deploying the netlist onto a physical FPGA development board to observe real-world silicon behavior under extended, heavy-load concurrent traffic. Overall, this IP block is lightweight, highly efficient, and perfectly suited for SoC applications requiring safe buffering between independent clock domains.
