@@ -1,20 +1,13 @@
 <h1 align="center">Dual-Clock Asynchronous FIFO</h1>
 <p align="center"><i>A parameterizable, CDC-safe FIFO for bridging independent read/write clock domains</i></p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/RTL-Verilog-blue" alt="Verilog">
-  <img src="https://img.shields.io/badge/Synthesis-Xilinx%20Vivado-orange" alt="Vivado">
-  <img src="https://img.shields.io/badge/Timing-0%20Violations-brightgreen" alt="Timing Clean">
-  <img src="https://img.shields.io/badge/Verification-Self--Checking%20Testbench-yellow" alt="Testbench">
-</p>
-
 ---
 
 ## Author
 
 **Neelava Mukherjee**
-- **M.Tech**, Electrical Engineering (Integrated Circuits and Systems) — Indian Institute of Technology Bombay
-- **B.E.**, Electrical Engineering — Jadavpur University
+- **M.Tech**, Electrical Engineering (Integrated Circuits and Systems) — Indian Institute of Technology Bombay (2027)
+- **B.E.**, Electrical Engineering — Jadavpur University (2025)
 
 ---
 
